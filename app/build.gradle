@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     namespace 'com.example.irtcpservice'
     compileSdk 34
+    
     defaultConfig {
         applicationId "com.example.irtcpservice"
         minSdk 19
@@ -10,4 +11,9 @@ android {
         versionCode 1
         versionName "1.0"
     }
+}
+
+dependencies {
+    // Tamamen boş kalmaması için temel Android kütüphanesini ekledik
+    implementation 'androidx.core:core:1.12.0'
 }
