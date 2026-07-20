@@ -1,4 +1,3 @@
-
 name: Android Build
 
 on:
@@ -19,21 +18,21 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: gradle
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-
-    - name: Install Android SDK components
+      
+    - name: Accept Android SDK licenses
       run: |
-        sdkmanager --install "platforms;android-34" "build-tools;34.0.0"
+        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
-    - name: Build with Gradle
-      run: |
-        cd ${{ github.workspace }}
-        curl -L https://services.gradle.org/distributions/gradle-8.1-bin.zip -o gradle.zip
-        unzip -q gradle.zip
-        ./gradle-8.1/bin/gradle assembleDebug
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+
+    - name: Build with Gradle wrapper
+      run: ./gradlew assembleDebug --stacktrace
+      env:
+        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
