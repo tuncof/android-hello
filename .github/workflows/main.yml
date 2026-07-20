@@ -21,18 +21,22 @@ jobs:
 
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-      
-    - name: Accept Android SDK licenses
+
+    - name: Download Gradle
       run: |
-        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        cd ${{ github.workspace }}
+        wget -q https://services.gradle.org/distributions/gradle-8.1-bin.zip
+        unzip -q gradle-8.1-bin.zip
+        ls -la gradle-8.1/bin/
 
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
-
-    - name: Build with Gradle wrapper
-      run: ./gradlew assembleDebug --stacktrace
+    - name: Build with Gradle
+      run: |
+        cd ${{ github.workspace }}
+        ./gradle-8.1/bin/gradle --version
+        ./gradle-8.1/bin/gradle assembleDebug --stacktrace
       env:
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+        ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
