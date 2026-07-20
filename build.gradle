@@ -1,0 +1,8 @@
+// Sadece Gradle eklentisini tanımlıyoruz, başka hiçbir şey yok.
+buildscript {
+    repositories { google() \n mavenCentral() }
+    dependencies { classpath 'com.android.tools.build:gradle:8.1.1' }
+}
+allprojects {
+    repositories { google() \n mavenCentral() }
+}
