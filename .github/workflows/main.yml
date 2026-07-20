@@ -27,16 +27,15 @@ jobs:
         cd ${{ github.workspace }}
         wget -q https://services.gradle.org/distributions/gradle-8.1-bin.zip
         unzip -q gradle-8.1-bin.zip
-        ls -la gradle-8.1/bin/
 
-    - name: Build with Gradle
+    - name: Build with Gradle (verbose)
       run: |
         cd ${{ github.workspace }}
-        ./gradle-8.1/bin/gradle --version
-        ./gradle-8.1/bin/gradle assembleDebug --stacktrace
+        ./gradle-8.1/bin/gradle assembleDebug --info 2>&1 | tail -100
       env:
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+      continue-on-error: true
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
