@@ -1,0 +1,13 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.example.irtcpservice'
+    compileSdk 34
+    defaultConfig {
+        applicationId "com.example.irtcpservice"
+        minSdk 19
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+}
