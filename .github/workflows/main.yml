@@ -28,19 +28,21 @@ jobs:
         wget -q https://services.gradle.org/distributions/gradle-8.1-bin.zip
         unzip -q gradle-8.1-bin.zip
 
-    - name: Build with Gradle (verbose)
+    - name: Build with Gradle
       run: |
         cd ${{ github.workspace }}
-        ./gradle-8.1/bin/gradle assembleDebug --info 2>&1 | tail -100
-      env:
-        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
-        ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
-      continue-on-error: true
+        ./gradle-8.1/bin/gradle assembleDebug
+
+    - name: Find APK
+      run: |
+        echo "Searching for APK files..."
+        find ${{ github.workspace }} -name "*.apk" -type f
+        echo "---"
+        ls -la ${{ github.workspace }}/app/build/outputs/apk/ || echo "apk directory not found"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
-      if: success()
       with:
         name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: ${{ github.workspace }}/app/build/outputs/apk/debug/*.apk
         retention-days: 30
