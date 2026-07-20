@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-
 #
 # Copyright 2015 the original author or authors.
 #
@@ -16,163 +15,22 @@
 # limitations under the License.
 #
 
-##############################################################################
-##
-##  Gradle start up script for UN*X
-##
-##############################################################################
+set -e
 
-# Attempt to set APP_HOME
-# Resolve links: $0 may be a symlink
-PRG="$0"
-# Need this for relative symlinks.
-while [ -h "$PRG" ] ; do
-    ls -ld "$PRG"
-    link=`expr "$PRG" : '.*->\(.*\)$'`
-    if expr "$link" : '/.*' > /dev/null; then
-        PRG="$link"
-    else
-        PRG=`dirname "$PRG"`"/$link"
-    fi
-done
-SAVEDPWD=`pwd`
-cd "`dirname \"$PRG\"`" >/dev/null
-APP_HOME=`pwd -P`
-cd "$SAVEDPWD" >/dev/null
+DIRNAME=$(cd "$(dirname "$0")" && pwd)
 
-APP_NAME="Gradle"
-APP_BASE_NAME=`basename "$0"`
-
-# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
-DEFAULT_JVM_OPTS='" "-Xmx64m" "-Xms64m"'
-
-# Use the maximum available, or set MAX_FD != maximum.
-MAX_FD="maximum"
-
-warn () {
-    echo "$*" >&2
-}
-
-die () {
-    echo
-    echo "$*" >&2
+if [ ! -d "$DIRNAME/gradle/wrapper" ]; then
+    echo "ERROR: gradle/wrapper directory not found"
     exit 1
-}
+fi
 
-# OS specific support (must be 'true' or 'false').
-darwin=false
-msys=false
-cygwin=false
-native=false
-case "`uname`" in
-  Darwin* )
-    darwin=true
-    ;;
-  MINGW* )
-    msys=true
-    ;;
-  CYGWIN* )
-    cygwin=true
-    ;;
-  NATIVEWIN )
-    native=true
-    ;;
-esac
-
-# Determine the Java command to use to start the JVM.
-if [ -n "$JAVA_HOME" ] ; then
-    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
-        # IBM's JDK on AIX uses strange locations for the executables
-        JAVACMD="$JAVA_HOME/jre/sh/java"
-    else
-        JAVACMD="$JAVA_HOME/bin/java"
-    fi
-    if [ ! -x "$JAVACMD" ] ; then
-        die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
-
-Please set the JAVA_HOME variable in your environment to match the
-location of your Java installation."
-    fi
+if [ -z "$JAVA_HOME" ]; then
+    JAVA_CMD="java"
 else
-    JAVACMD="java"
-    command -v java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
-
-Please set the JAVA_HOME variable in your environment to match the
-location of your Java installation."
+    JAVA_CMD="$JAVA_HOME/bin/java"
 fi
 
-# Increase the maximum file descriptors if we can.
-if [ "$darwin" = "false" ] && [ "$msys" = "false" ] && [ "$cygwin" = "false" ] && [ "$native" = "false" ] ; then
-    MAX_FD_LIMIT=`ulimit -H -n`
-    if [ $? -eq 0 ] ; then
-        if [ "$MAX_FD" = "maximum" -o "$MAX_FD" = "max" ] ; then
-            MAX_FD="$MAX_FD_LIMIT"
-        fi
-        ulimit -n $MAX_FD
-        if [ $? -ne 0 ] ; then
-            warn "Could not set maximum file descriptor limit: $MAX_FD"
-        fi
-    else
-        warn "Could not query maximum file descriptor limit: $MAX_FD_LIMIT"
-    fi
-fi
+"$JAVA_CMD" -version > /dev/null 2>&1 || (echo "ERROR: Java not found"; exit 1)
 
-# For Darwin, add options to specify how the application appears in the dock
-if $darwin; then
-    GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/media/gradle.icns\""
-fi
-
-# For Cygwin or MSYS, switch paths to Windows format before running java
-if [ "$cygwin" = "true" ] -o [ "$msys" = "true" ] ; then
-    APP_HOME=`(cd "$APP_HOME" && pwd -W)`
-    CLASSPATH=`(cd "$CLASSPATH" && pwd -W)`
-
-    JAVACMD=`(cd "$(dirname \"$JAVACMD\")" && pwd -W)/$(basename \"$JAVACMD\")`
-
-    # We build the pattern for arguments to be converted via cygpath
-    ROOTDIRSRAW=`find -L / -maxdepth 3 -type d -name node_modules 2>/dev/null`
-    SEP=""
-    for dir in $ROOTDIRSRAW ; do
-        ROOTDIRS="${ROOTDIRS}${SEP}$(convert "$dir")"
-        SEP="|"
-    done
-    OURCYGPATTERN="(^($ROOTDIRS))"
-    # Add a user-defined pattern to the cygpath arguments
-    if [ "$GRADLE_CYGPATTERN" != "" ] ; then
-        OURCYGPATTERN="$OURCYGPATTERN|($GRADLE_CYGPATTERN)"
-    fi
-    # Now convert the arguments - kludge to limit ourselves to /bin/sh
-    i=0
-    for arg in "$@" ; do
-        CHECK=`echo "$arg"|egrep -c "$OURCYGPATTERN" -`
-        CHECK2=`echo "$arg"|egrep -c "^-"`                                 ### Determine if an option
-
-        if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition
-            arg=`cygpath --path --mixed "$arg"`
-        fi
-        i=$((i+1))
-        eval `echo args$i`=\"$arg\"
-    done
-    case $i in
-        (1) set -- "$args1" ;;
-        (2) set -- "$args1" "$args2" ;;
-        (3) set -- "$args1" "$args2" "$args3" ;;
-        (4) set -- "$args1" "$args2" "$args3" "$args4" ;;
-        (5) set -- "$args1" "$args2" "$args3" "$args4" "$args5" ;;
-        (6) set -- "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" ;;
-        (7) set -- "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" ;;
-        (8) set -- "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" "$args8" ;;
-    esac
-fi
-
-# Escape application args
-save () {
-    for i do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/'/" ; done
-    echo " "
-}
-APP_ARGS=$(save "$@")
-
-# Collect all arguments for the java command, following the shell quoting and substitution rules
-eval "set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS \"-Dorg.gradle.appname=$APP_BASE_NAME\" -classpath \"$CLASSPATH\" org.gradle.wrapper.GradleWrapperMain \"$APP_ARGS\""
-
-exec "$JAVACMD" "$@"
+GRADLE_JAR="$DIRNAME/gradle/wrapper/gradle-wrapper.jar"
+exec "$JAVA_CMD" -Dorg.gradle.appname=gradlew -classpath "$GRADLE_JAR" org.gradle.wrapper.GradleWrapperMain "$@"
