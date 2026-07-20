@@ -41,7 +41,7 @@ jobs:
         ls -la ${{ github.workspace }}/app/build/outputs/apk/ || echo "apk directory not found"
 
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: ${{ github.workspace }}/app/build/outputs/apk/debug/*.apk
